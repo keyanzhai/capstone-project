@@ -15,3 +15,10 @@
 ---
 
 No orientation / joint angle?
+
+---
+
+```
+source mp_env/bin/activate
+python3 pose.py
+```

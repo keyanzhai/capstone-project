@@ -37,7 +37,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="/Users/keyanzhai/Desktop/Courses/Spring 2023/Capstone Project/pose-est/mediapipe/mp_env"
+VIRTUAL_ENV="/Users/keyanzhai/Desktop/Courses/Spring 2023/Capstone Project/pose-est/mediapipe/capstone-project/mp_env"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"

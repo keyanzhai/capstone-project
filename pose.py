@@ -1,6 +1,8 @@
 import cv2
 import mediapipe as mp
 import numpy as np
+import rom
+
 mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
 mp_pose = mp.solutions.pose
@@ -71,7 +73,19 @@ with mp_pose.Pose(
     results = pose.process(image)
 
     if 'landmark' in dir(results.pose_world_landmarks):
-        print(results.pose_world_landmarks.landmark[mp_pose.PoseLandmark.NOSE])
+        right_wrist = results.pose_world_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_WRIST]
+        right_wrist_pos = np.array([right_wrist.x, right_wrist.y, right_wrist.z])
+
+        right_elbow = results.pose_world_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_ELBOW]
+        right_elbow_pos = np.array([right_elbow.x, right_elbow.y, right_elbow.z])
+
+        right_shoulder = results.pose_world_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_SHOULDER]
+        right_shoulder_pos = np.array([right_shoulder.x, right_shoulder.y, right_shoulder.z])
+
+        rom_right_elbow = rom.rom_right_elbow(right_wrist_pos, right_elbow_pos, right_shoulder_pos)
+        print(rom_right_elbow)
+
+        
 
     # Draw the pose annotation on the image.
     image.flags.writeable = True
