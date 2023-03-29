@@ -1,9 +1,14 @@
 import cv2
 import mediapipe as mp
 import numpy as np
+import socket
 mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
 mp_pose = mp.solutions.pose
+
+# Setup UDP protocole for sending data to Unity
+sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+serverAddressPort = ("127.0.0.1", 5052)
 
 # For static images:
 # IMAGE_FILES = ["test.JPG"]
@@ -69,10 +74,15 @@ with mp_pose.Pose(
     image.flags.writeable = False
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     results = pose.process(image)
+    data = []
 
+    # Send data to Unity
     if 'landmark' in dir(results.pose_world_landmarks):
-        print(results.pose_world_landmarks.landmark[mp_pose.PoseLandmark.NOSE])
-
+        print(results.pose_world_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_WRIST])
+        if results.pose_world_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_WRIST].visibility > 0.5:
+          data.extend([-results.pose_world_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_WRIST].x, -results.pose_world_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_WRIST].y, results.pose_world_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_WRIST].z])
+          sock.sendto(str.encode(str(data)), serverAddressPort)
+    
     # Draw the pose annotation on the image.
     image.flags.writeable = True
     image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
