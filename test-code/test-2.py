@@ -1,6 +1,10 @@
 import cv2
 import mediapipe as mp
 import numpy as np
+import time
+
+start_time = time.time()
+print("start_time: ", start_time)
 
 mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
@@ -63,7 +67,13 @@ with mp_pose.Pose(
         landmark_drawing_spec=mp_drawing_styles.get_default_pose_landmarks_style())
     
     frame += 1
-
+    
+    curr_time = time.time()
+    print("timer: ", curr_time - start_time)
+    if (curr_time - start_time > 30):
+      print("End of 30 seconds")
+      print("Count = ", count)
+      break
 
     # Flip the image horizontally for a selfie-view display.
     cv2.imshow('MediaPipe Pose', cv2.flip(image, 1))
