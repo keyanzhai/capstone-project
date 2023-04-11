@@ -3,8 +3,8 @@ Report for fall risk assessment
 -------------------------------
 User information
 
-Name: Keyan Zhai
-Age: 24
+Name: kz
+Age: 21
 Gender: male
 Height: 178 cm
 Test date: 2023-04-11

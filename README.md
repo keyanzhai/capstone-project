@@ -4,8 +4,8 @@
 
 ```
 source mp_env/bin/activate
-python3 pose-recorded.py
-python3 pose-webcam.py
+cd src
+python3 main.py
 ```
 
 ## Output Format
