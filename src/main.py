@@ -43,8 +43,7 @@ if __name__ == "__main__":
     report_file.write("\n-------------------------------\n")
     report_file.write("Test1 - Timed Up & Go (TUG)\n\n")
     
-    # test1_time = test1()
-    test1_time = 10.88
+    test1_time = test1()
 
     print("test1 finished\n")
     report_file.write("Total time = %.2f seconds. \n\n" % test1_time)
@@ -63,8 +62,7 @@ if __name__ == "__main__":
     report_file.write("\n-------------------------------\n")
     report_file.write("Test2 - 30-Second Chair Stand\n\n")
     
-    # test2_count = test2()
-    test2_count = 15
+    test2_count = test2()
     
     print("test2 finished\n")
     report_file.write("Stand count = %d.\n\n" % test2_count)
@@ -88,8 +86,7 @@ if __name__ == "__main__":
     report_file.write("\tTest3 stage1 - stand with your feet side-by-side\n\n")
     print("\ttest3 stage1 - stand with your feet side-by-side.")
 
-    # test3_stage1_time = test3(0)
-    test3_stage1_time = 7
+    test3_stage1_time = test3(0)
     report_file.write("\tTime = %.2f seconds.\n\n" % test3_stage1_time)
     print("\ttest3 stage1 finished\n")
     
@@ -107,8 +104,7 @@ if __name__ == "__main__":
     report_file.write("\tTest3 stage2-left - place the instep of left foot so it is touching the big toe of the right foot\n\n")
     print("\ttest3 stage2-left - place the instep of left foot so it is touching the big toe of the right foot.")
 
-    # test3_stage2_left_time = test3(1)
-    test3_stage2_left_time = 10
+    test3_stage2_left_time = test3(1)
     report_file.write("\tTime = %.2f seconds.\n\n" % test3_stage2_left_time)
     print("\ttest3 stage2-left finished\n")
 
@@ -126,8 +122,7 @@ if __name__ == "__main__":
     report_file.write("\tTest3 stage2-right - place the instep of right foot so it is touching the big toe of the left foot\n\n")
     print("\ttest3 stage2-right - place the instep of right foot so it is touching the big toe of the left foot.")
 
-    # test3_stage2_right_time = test3(2)
-    test3_stage2_right_time = 10
+    test3_stage2_right_time = test3(2)
     report_file.write("\tTime = %.2f seconds.\n\n" % test3_stage2_right_time)
     print("\ttest3 stage2-right finished\n")
 
@@ -145,8 +140,7 @@ if __name__ == "__main__":
     report_file.write("\tTest3 stage3-left - Tandem stand: Place left foot in front of the right foot, heel touching toe. \n\n")
     print("\ttest3 stage3-left - Tandem stand: Place left foot in front of the right foot, heel touching toe.")
 
-    # test3_stage3_left_time = test3(3)
-    test3_stage3_left_time = 10
+    test3_stage3_left_time = test3(3)
     report_file.write("\tTime = %.2f seconds.\n\n" % test3_stage3_left_time)
     print("\ttest3 stage3-left finished\n")
 
@@ -164,8 +158,7 @@ if __name__ == "__main__":
     report_file.write("\tTest3 stage3-right - Tandem stand: Place right foot in front of the left foot, heel touching toe.\n\n")
     print("\ttest3 stage3-right - Tandem stand: Place right foot in front of the left foot, heel touching toe.")
 
-    # test3_stage3_right_time = test3(4)
-    test3_stage3_right_time = 10
+    test3_stage3_right_time = test3(4)
     report_file.write("\tTime = %.2f seconds.\n\n" % test3_stage3_right_time)
     print("\ttest3 stage3-right finished\n")
 
@@ -183,8 +176,7 @@ if __name__ == "__main__":
     report_file.write("\tTest3 stage4-left - Stand on left foot.\n\n")
     print("\ttest3 stage4-left - Stand on left foot.")
 
-    # test3_stage4_left_time = test3b(0)
-    test3_stage4_left_time = 10
+    test3_stage4_left_time = test3b(0)
     report_file.write("\tTime = %.2f seconds.\n\n" % test3_stage4_left_time)
     print("\ttest3 stage4-left finished\n")
 
@@ -202,8 +194,7 @@ if __name__ == "__main__":
     report_file.write("\tTest3 stage4-right - Stand on right foot.\n\n")
     print("\ttest3 stage4-right - Stand on right foot.")
 
-    # test3_stage4_right_time = test3b(1)
-    test3_stage4_right_time = 10
+    test3_stage4_right_time = test3b(1)
     report_file.write("\tTime = %.2f seconds.\n\n" % test3_stage4_right_time)
     print("\ttest3 stage4-right finished\n")
 

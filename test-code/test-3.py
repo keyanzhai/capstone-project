@@ -100,15 +100,15 @@ with mp_pose.Pose(
                 # print("Visibility: ", visibility)
                 
                 # If the distance is greater than 5 cm then the user lost their balance
-                # if np.any(dis_pos > threshold):
-                #     print(dis_pos > threshold)
-                #     print("Lost Balance")
-                #     break
+                if np.any(dis_pos > threshold):
+                    print(dis_pos > threshold)
+                    print("Lost Balance")
+                    break
                 
-                # # If the time elapsed is greater than 10 seconds then the user past the test
-                # if (time_elapsed > 10):
-                #     print("Passed")
-                #     break
+                # If the time elapsed is greater than 10 seconds then the user past the test
+                if (time_elapsed > 10):
+                    print("Passed")
+                    break
         
         # Draw the pose annotation on the image.
         image.flags.writeable = True
