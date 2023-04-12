@@ -3,11 +3,11 @@ Report for fall risk assessment
 -------------------------------
 User information
 
-Name: kz
-Age: 21
+Name: Keyan Zhai
+Age: 24
 Gender: male
 Height: 178 cm
-Test date: 2023-04-11
+Test date: 2023-04-12
 
 -------------------------------
 Test1 - Timed Up & Go (TUG)
