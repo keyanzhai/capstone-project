@@ -11,16 +11,17 @@ propogate the dynamics
 '''
 
 class poseFilter:
-	def __init__(s,Q=0.1,R=0.1,pos=np.zeros((33,1)),vel=np.zeros((33,1))):
+	def __init__(s,Q=0.1,R=0.1,pos=np.zeros((33,1)),vel=np.zeros((33,1)),stateSize=66):
 		# Q is the covariance matrix for the process noise
 		# R is the covariance matrix for the measurement noise
 		# pos is the initial position of each joint with size (33,1)
 		# vel is the initial velocity of each joint with size (33,1)
-		s.Q = Q*np.eye(66)
-		s.R = R*np.eye(66)
+		s.size = stateSize
+		s.Q = Q*np.eye(s.size)
+		s.R = R*np.eye(s.size)
 		s.prevPos = pos
 		s.vel = vel
-		s.stateCov = np.eye(66)
+		s.stateCov = np.eye(s.size)
 
 	def generateSigmaPoints(s,state,stateCov,dt=(1.0/20.0)):
 		'''
@@ -45,16 +46,16 @@ class poseFilter:
 
 		return sigPoints
 
-	def getState(self,currentPos):
+	def getState(s,currentPos):
 		'''
 		This function is used to get the current state of the system
 		:param currentPos: This is the current position of the joints
 		:return: state: This is the current state of the system
 		'''
-		state = np.zeros((66,1))
-		state[0:33,0] = currentPos[:,0]
-		self.vel = currentPos - self.prevPos
-		state[33:66, 0] = self.vel[:, 0]
+		state = np.zeros((s.size,1))
+		state[0:int(s.size/2),0] = currentPos[:,0]
+		s.vel = currentPos - s.prevPos
+		state[int(s.size/2):s.size, 0] = s.vel[:, 0]
 		return state
 
 	def propDynamics(s,dt):
