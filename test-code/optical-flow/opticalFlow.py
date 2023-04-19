@@ -5,7 +5,7 @@ from helperFunctions import skeleton
 import imageio
 import time
 
-filename = './TestVideos/Optical Flow Test.mp4'
+filename = './TestVideos/slow_traffic_small.mp4'
 
 cap = cv.VideoCapture(filename)
 vidFPS = cap.get(cv.CAP_PROP_FPS)
@@ -155,15 +155,15 @@ for i in range(0,len(timeContainer)-1):
 
 
 print("Saving GIF file")
-# with imageio.get_writer("testing.gif", mode="I") as writer:
-#     for idx, frame in enumerate(frameContainer):
-#         if idx%25:
-#             print("Adding frame to GIF file: ", idx + 1)
-#
-#         frame = cv.putText(frame, 'FPS: ' + str(np.round(frameRate[idx],2)), (20, 40), cv.FONT_HERSHEY_SIMPLEX,1, (0, 0, 255), 2)
-#         frame = cv.putText(frame, 'Frame #: ' + str(idx), (1000, 40), cv.FONT_HERSHEY_SIMPLEX,1, (0, 0, 255), 2)
-#
-#         rgb_frame = cv.cvtColor(frame, cv.COLOR_BGR2RGB)
-#         writer.append_data(rgb_frame)
-#
+with imageio.get_writer("testing.gif", mode="I") as writer:
+    for idx, frame in enumerate(frameContainer):
+        if idx%25:
+            print("Adding frame to GIF file: ", idx + 1)
+
+        frame = cv.putText(frame, 'FPS: ' + str(np.round(frameRate[idx],2)), (20, 40), cv.FONT_HERSHEY_SIMPLEX,1, (0, 0, 255), 2)
+        frame = cv.putText(frame, 'Frame #: ' + str(idx), (1000, 40), cv.FONT_HERSHEY_SIMPLEX,1, (0, 0, 255), 2)
+
+        rgb_frame = cv.cvtColor(frame, cv.COLOR_BGR2RGB)
+        writer.append_data(rgb_frame)
+
 

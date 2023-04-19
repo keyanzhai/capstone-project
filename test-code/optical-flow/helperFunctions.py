@@ -1,7 +1,6 @@
 import numpy as np
 import cv2 as cv
 
-
 class skeleton:
     def __init__(self,p0,numLimbPoints=10,fps=30):
         self.jointPos = p0
