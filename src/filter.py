@@ -83,7 +83,27 @@ class poseFilter:
 
 		return 0
 
+
 if __name__=='__main__':
 	pose = poseFilter()
 	pose.getState(np.ones((33,1)))
 	pose.generateSigmaPoints(np.zeros((66,1)),np.eye(66))
+
+	# Using Filterpy for UKF:
+	def measure(x):
+		return x
+
+	def dynamics(x, dt):
+		# This function takes the state and adds the velocity*dt to the position
+		tmp = x[0:33 * 3] + x[33 * 3:] * dt
+		tmp = np.vstack((tmp, x[33 * 3:]))
+		return tmp
+
+	# UKF setup
+	filter = kalman.UnscentedKalmanFilter(33 * 3 * 2, 33 * 3 * 2, 1. / 20., measure, dynamics)
+	filter.x = np.zeros(3 * 33 * 2)
+	filter.P *= 0.2
+	filter.R = np.diag(np.ones((3 * 33 * 2,)))
+	filter.Q = Q_discrete_white_noise(dim=2, dt=1. / 20., var=0.01 ** 2, block_size=3)
+	filter = kalman.UnscentedKalmanFilter(33 * 3 * 2, 33 * 3 * 2, 1. / 20., measure, dynamics)
+
