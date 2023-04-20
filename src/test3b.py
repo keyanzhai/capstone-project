@@ -3,7 +3,7 @@ import mediapipe as mp
 import numpy as np
 import time
 
-def test3b(stageb_id):
+def test3b():
     start_time = time.time()
 
     mp_drawing = mp.solutions.drawing_utils
