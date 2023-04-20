@@ -46,8 +46,11 @@ imageContainer = []
 ######################################
 # UKF Setup
 ######################################
-imageHeight = 480
-imageWidth = 640
+imageHeight = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+imageWidth = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+
+print(f"Image width: {imageWidth}")
+print(f"Image height: {imageHeight}")
 #**********************************************************************************************************************
 # What do we want to track?
 track = 'shoulders'         # Either shoulders or all, though I only have plotting for shoulders right now
@@ -60,13 +63,14 @@ elif track.lower()=='shoulders':
 
 
 # Initialization of the UKF
-points = MerweScaledSigmaPoints(numDims*2, alpha=.1, beta=2., kappa=-1,sqrt_method=scipy.linalg.sqrtm)
+# points = MerweScaledSigmaPoints(numDims*2, alpha=.1, beta=2., kappa=-1,sqrt_method=scipy.linalg.sqrtm)
+points = MerweScaledSigmaPoints(numDims*2, alpha=1e-3, beta=2., kappa=0)
 # points = JulierSigmaPoints(numDims*2, kappa=-1,sqrt_method=scipy.linalg.sqrtm)
 filter = kalman.UnscentedKalmanFilter(numDims*2,numDims,1./20.,measure,dynamics,points)
 filter.x = np.zeros(numDims*2)  # Initial State, though this is overwritten by the first measurement
 filter.P *= 0.5     # Covariance
 filter.R = np.diag(np.ones((numDims*2,))*1) #Measurement Noise
-filter.Q = filter.Q*0.005   #Dynamics Noise (Increasing this increases the speed of the update)                                       #Q_discrete_white_noise(dim=2,dt = 1./20.,var = 0.01**2, block_size=numDims,order_by_dim=False)
+filter.Q = filter.Q*0.1   #Dynamics Noise (Increasing this increases the speed of the update)                                       #Q_discrete_white_noise(dim=2,dt = 1./20.,var = 0.01**2, block_size=numDims,order_by_dim=False)
 frameCount = -1
 #######################################################################################################################
 
@@ -118,21 +122,6 @@ with mp_pose.Pose(
             filter.predict(dt=delt,numDims=numDims)
             filter.update(state,numDims=numDims)
             #################################################################
-            # right_wrist = results.pose_world_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_WRIST]
-            # # right_wrist_pos = np.array([right_wrist.x, right_wrist.y, right_wrist.z])
-            # right_wrist_pos = np.array([right_wrist.x, right_wrist.y])
-            #
-            # right_elbow = results.pose_world_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_ELBOW]
-            # # right_elbow_pos = np.array([right_elbow.x, right_elbow.y, right_elbow.z])
-            # right_elbow_pos = np.array([right_elbow.x, right_elbow.y])
-            #
-            # right_shoulder = results.pose_world_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_SHOULDER]
-            # # right_shoulder_pos = np.array([right_shoulder.x, right_shoulder.y, right_shoulder.z])
-            # right_shoulder_pos = np.array([right_shoulder.x, right_shoulder.y])
-            #
-            # rom_right_elbow = rom.rom_right_elbow(right_wrist_pos, right_elbow_pos, right_shoulder_pos)
-            # print(rom_right_elbow)
-            # print(f'R Upper Arm Length: {rom.limbLength(right_shoulder_pos, right_elbow_pos)}')
 
         # Draw the pose annotation on the image.
         image.flags.writeable = True
