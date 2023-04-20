@@ -19,9 +19,9 @@ with mp_pose.Pose(
     min_detection_confidence=0.5,
     min_tracking_confidence=0.5) as pose:
 
-    start_pos = np.zeros((6,2));
-    prev_pos = np.zeros((6,2));
-    curr_pos = np.zeros((6,2));
+    start_pos = np.zeros((4,2));
+    prev_pos = np.zeros((4,2));
+    curr_pos = np.zeros((4,2));
     frame_cnt = 0
     
     while cap.isOpened():
@@ -51,15 +51,11 @@ with mp_pose.Pose(
             # Get the (x, y) pixel position of the 6 feet joints of the current frame
             right_heel = results.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_HEEL]
             left_heel = results.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_HEEL]
-            right_ankle = results.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_ANKLE]
-            left_ankle = results.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_ANKLE]
             right_index = results.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_FOOT_INDEX]
             left_index = results.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_FOOT_INDEX]
 
             right_heel_pos = np.array([right_heel.x * image_width, right_heel.y * image_height])
             left_heel_pos = np.array([left_heel.x * image_width, left_heel.y * image_height])
-            right_ankle_pos = np.array([right_ankle.x * image_width, right_ankle.y * image_height])  
-            left_ankle_pos = np.array([left_ankle.x * image_width, left_ankle.y * image_height])
             right_index_pos = np.array([right_index.x * image_width, right_index.y * image_height])
             left_index_pos = np.array([left_index.x * image_width, left_index.y * image_height])
         elif (frame_cnt == 30):
@@ -73,11 +69,13 @@ with mp_pose.Pose(
             start_time = time.time() # start the timer
 
             # Positions of the 6 joints of the current frame
-            # Size: (6, 2)
-            curr_pos = np.array([right_heel_pos, right_ankle_pos, right_index_pos, left_heel_pos, left_ankle_pos, left_index_pos])
+            # Size: (4, 2)
+            curr_pos = np.array([right_heel_pos, right_index_pos, left_heel_pos, left_index_pos])
+            right_foot_length = np.linalg.norm(right_heel_pos - right_index_pos)
+            print("right_foot_length = ", right_foot_length)
 
-            start_pos = curr_pos # (6, 2)
-            prev_pos = curr_pos # (6, 2)
+            start_pos = curr_pos # (4, 2)
+            prev_pos = curr_pos # (4, 2)
             frame_old_img = frame_img.copy()
             print("initial positions: ", start_pos)
         else:
@@ -92,9 +90,8 @@ with mp_pose.Pose(
             sub_pos = curr_pos - start_pos # 6x2
             sq_pos = np.square(sub_pos) # 6x2
             sum_pos = np.sum(sq_pos, axis=1) # 6x1
-            dis_pos = (np.sqrt(sum_pos)).reshape((6,1)) # 6x1
-            # threshold = np.array([[125],[125],[125],[125],[125],[125]])
-            threshold = 150 * np.ones((6,1))
+            dis_pos = (np.sqrt(sum_pos)).reshape((4,1)) # 6x1
+            threshold = 0.25 * right_foot_length * np.ones((4,1))
 
             print("dis_pos = ", dis_pos)
 

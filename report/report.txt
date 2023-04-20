@@ -3,12 +3,50 @@ Report for fall risk assessment
 -------------------------------
 User information
 
-Name: Amar Mohanty
-Age: 25
+Name: Keyan Zhai
+Age: 24
 Gender: male
-Height: 180 cm
-Test date: 2023-04-12
+Height: 178 cm
+Test date: 2023-04-20
 
 -------------------------------
 Test1 - Timed Up & Go (TUG)
+
+Total time = 5.19 seconds. 
+
+Test1 passed. User is not at risk for falling.
+
+-------------------------------
+Test2 - 30-Second Chair Stand
+
+Stand count = 20.
+
+Test2 passed. User is not at risk for falling.
+
+-------------------------------
+Test3 - 4-Stage Balance Test
+
+	-------------------------------
+	Test3 stage1 - stand with your feet side-by-side
+
+	Time = 2.69 seconds.
+
+	Test3 stage1 failed. User is at risk for falling.
+
+	-------------------------------
+	Test3 stage2-left - place the instep of left foot so it is touching the big toe of the right foot
+
+	Time = 2.66 seconds.
+
+	Test3 stage2-left failed. User is at risk for falling.
+
+	-------------------------------
+	Test3 stage3-left - Tandem stand: Place left foot in front of the right foot, heel touching toe. 
+
+	Time = 3.81 seconds.
+
+	Test3 stage3-left failed. User is at risk for falling.
+
+	-------------------------------
+	Test3 stage4-right - Stand on right foot.
 

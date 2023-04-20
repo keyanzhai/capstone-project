@@ -2,6 +2,7 @@ import datetime
 from test1 import test1
 from test2 import test2, test2_pass
 from test3 import test3
+from test3OpticalFlow import test3_optical_flow
 from test3b import test3b
 from vis import vis_directions
 
@@ -86,7 +87,7 @@ if __name__ == "__main__":
     report_file.write("\n-------------------------------\n")
     report_file.write("Test3 - 4-Stage Balance Test\n")
 
-    # ============================== stage1 (test_idx = 3, stage_idx = 1) ==============================
+    # ============================== test3-stage1 (test_idx = 3, stage_idx = 1) ==============================
     report_file.write("\n\t-------------------------------\n")
     report_file.write("\tTest3 stage1 - stand with your feet side-by-side\n\n")
     print("\ttest3 stage1 - stand with your feet side-by-side.")
@@ -94,7 +95,7 @@ if __name__ == "__main__":
     test_idx = 3
     stage_idx = 1
     vis_directions(test_idx)
-    test3_stage1_time = test3(stage_idx)
+    test3_stage1_time = test3_optical_flow(stage_idx)
     report_file.write("\tTime = %.2f seconds.\n\n" % test3_stage1_time)
     print("\ttest3 stage1 finished\n")
     
@@ -107,7 +108,7 @@ if __name__ == "__main__":
         report_file.write("\tTest3 stage1 passed. User is not at risk for falling.\n")
     # ==================================================================================
 
-    # ============================== stage2-left (test_idx = 4, stage_idx = 2) ========================
+    # ============================== test3-stage2-left (test_idx = 4, stage_idx = 2) ========================
     report_file.write("\n\t-------------------------------\n")
     report_file.write("\tTest3 stage2-left - place the instep of left foot so it is touching the big toe of the right foot\n\n")
     print("\ttest3 stage2-left - place the instep of left foot so it is touching the big toe of the right foot.")
@@ -115,7 +116,7 @@ if __name__ == "__main__":
     test_idx = 4
     stage_idx = 2
     vis_directions(test_idx)
-    test3_stage2_left_time = test3(stage_idx)
+    test3_stage2_left_time = test3_optical_flow(stage_idx)
     report_file.write("\tTime = %.2f seconds.\n\n" % test3_stage2_left_time)
     print("\ttest3 stage2-left finished\n")
 
@@ -128,7 +129,7 @@ if __name__ == "__main__":
         report_file.write("\tTest3 stage2-left passed. User is not at risk for falling.\n")
     # ==================================================================================
 
-    # ============================== stage3-left (test_idx = 5, stage_idx = 3) ========================
+    # ============================== test3-stage3-left (test_idx = 5, stage_idx = 3) ========================
     report_file.write("\n\t-------------------------------\n")
     report_file.write("\tTest3 stage3-left - Tandem stand: Place left foot in front of the right foot, heel touching toe. \n\n")
     print("\ttest3 stage3-left - Tandem stand: Place left foot in front of the right foot, heel touching toe.")
@@ -136,7 +137,7 @@ if __name__ == "__main__":
     test_idx = 5
     stage_idx = 3
     vis_directions(test_idx)
-    test3_stage3_left_time = test3(stage_idx)
+    test3_stage3_left_time = test3_optical_flow(stage_idx)
     report_file.write("\tTime = %.2f seconds.\n\n" % test3_stage3_left_time)
     print("\ttest3 stage3-left finished\n")
 
@@ -149,7 +150,7 @@ if __name__ == "__main__":
         report_file.write("\tTest3 stage3-left passed. User is not at risk for falling.\n")
     # ==================================================================================
 
-    # ============================== stage4-right (test_idx = 6) =======================
+    # ============================== test3-stage4-right (test_idx = 6) =======================
     report_file.write("\n\t-------------------------------\n")
     report_file.write("\tTest3 stage4-right - Stand on right foot.\n\n")
     print("\ttest3 stage4-right - Stand on right foot.")
