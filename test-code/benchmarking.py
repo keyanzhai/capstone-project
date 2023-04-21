@@ -3,6 +3,7 @@ import cv2
 
 #TODO: Change this to the test set you want to use
 testSet = 'v2'
+videoPlayback = True # If you want video playback set this to True
 videoSpeed = 100 # The higher the number the slower the video
 
 # Filenames
@@ -63,33 +64,34 @@ print("--------Average Distance--------")
 print("MediaPipe Average Distance Error: ", mpErrorAvg)
 print("UKF Average Distance Error:", ukfErrorAvg)
 
-# Playback the video with calculated positions
-cap = cv2.VideoCapture(videoFile)
-frame = 0
-while cap.isOpened():
-    success, image = cap.read()
-    if not success:
-        print("End of video.")
-        # If loading a video, use 'break' instead of 'continue'.
-        break
+if videoPlayback:
+    # Playback the video with calculated positions
+    cap = cv2.VideoCapture(videoFile)
+    frame = 0
+    while cap.isOpened():
+        success, image = cap.read()
+        if not success:
+            print("End of video.")
+            # If loading a video, use 'break' instead of 'continue'.
+            break
 
-    # Draw a green circle at the true position
-    x = int(truePos[frame,0])
-    y = int(truePos[frame,1])
-    cv2.circle(image, (x, y), 3, (0, 255, 0), -1)
+        # Draw a green circle at the true position
+        x = int(truePos[frame,0])
+        y = int(truePos[frame,1])
+        cv2.circle(image, (x, y), 3, (0, 255, 0), -1)
 
-    # Draw a red circle at the mp position
-    x = int(mpPos[frame,0])
-    y = int(mpPos[frame,1])
-    cv2.circle(image, (x, y), 3, (0, 0, 255), -1)
+        # Draw a red circle at the mp position
+        x = int(mpPos[frame,0])
+        y = int(mpPos[frame,1])
+        cv2.circle(image, (x, y), 3, (0, 0, 255), -1)
 
-    # Draw a blue circle at the ukf position
-    x = int(ukfPos[frame,0])
-    y = int(ukfPos[frame,1])
-    cv2.circle(image, (x, y), 3, (255, 0, 0), -1)
+        # Draw a blue circle at the ukf position
+        x = int(ukfPos[frame,0])
+        y = int(ukfPos[frame,1])
+        cv2.circle(image, (x, y), 3, (255, 0, 0), -1)
 
-    cv2.imshow('MediaPipe vs UKF', image)
-    if cv2.waitKey(videoSpeed) & 0xFF == 27:
-        break
-    frame += 1
-cap.release()
+        cv2.imshow('MediaPipe vs UKF', image)
+        if cv2.waitKey(videoSpeed) & 0xFF == 27:
+            break
+        frame += 1
+    cap.release()
