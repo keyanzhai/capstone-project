@@ -11,6 +11,14 @@ from filterpy import kalman
 from filterpy.common import Q_discrete_white_noise
 from filterpy.kalman import MerweScaledSigmaPoints, JulierSigmaPoints
 
+# TODO: Change this to change the video
+vidName = 'v3'
+
+# File locations for the video and where to save the mpPos and ukfPos files
+fileName = 'test-data/' + vidName + '.mov'
+mpName = 'test-data/stickerPos/' + vidName + '-mpPos.npy'
+ukfName = 'test-data/stickerPos/' + vidName + '-ukfPos.npy'
+
 ################################################################################################
 # UKF Functions
 ################################################################################################
@@ -32,22 +40,17 @@ mp_drawing_styles = mp.solutions.drawing_styles
 mp_pose = mp.solutions.pose
 
 # For webcam input:
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(fileName)
 frameTime = time.time()
 matplotlib.interactive(True)
 
 # p = plot3dClass()
 imageContainer = []
-# UKF setup
-
-
 
 
 ######################################
 # UKF Setup
 ######################################
-imageHeight = 480
-imageWidth = 640
 #**********************************************************************************************************************
 # What do we want to track?
 track = 'shoulders'         # Either shoulders or all, though I only have plotting for shoulders right now
@@ -82,7 +85,9 @@ x, y = np.meshgrid(x, y)
 
 gauss = gaus2d(x,y)
 
-
+# list of right shoulder positions from mediapipe and the UKF
+ukfShoulder = []
+mpShoulder = []
 
 #######################################################################################################################
 
@@ -94,16 +99,17 @@ with mp_pose.Pose(
         frameCount += 1
         success, image = cap.read()
         prevFrameTime = frameTime
+
         if not success:
-            print("Ignoring empty camera frame.")
-            # If loading a video, use 'break' instead of 'continue'.
-            continue
+            print("End of video.")
+            break
 
         # To improve performance, optionally mark the image as not writeable to
         # pass by reference.
         image.flags.writeable = False
         # image = cv2.GaussianBlur(image, (5, 5), 0)    # Uncommenting this line seems to have a positive effect when smoothing isn't on
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        imageHeight, imageWidth, _ = image.shape
 
 
         results = pose.process(image)
@@ -131,6 +137,8 @@ with mp_pose.Pose(
 
                 state = np.hstack((xyz, np.zeros((numDims)))).flatten()
                 filter.x = state
+                # filter.x[3] x - shoulder
+                # filter.x[4] y - shoulder
             else:
                 # Try a different way to get Velocity:
                 if velMethod=='opticalFlow':
@@ -196,6 +204,10 @@ with mp_pose.Pose(
         frameTime = time.time()
         fps = 1/(frameTime-prevFrameTime)
 
+        # Append mp and ukf data to lists
+        mpShoulder.append((int(xyz[3]),int(xyz[4])))
+        ukfShoulder.append((int(filter.x[3]), int(filter.x[4])))
+
         ##############################################################################################################
         # Want to have a comparison of UKF and raw, so lets stack two images together
         ##############################################################################################################
@@ -232,7 +244,7 @@ with mp_pose.Pose(
                 results.pose_landmarks,
                 mp_pose.POSE_CONNECTIONS,
                 landmark_drawing_spec=mp_drawing_styles.get_default_pose_landmarks_style())
-            image = cv2.flip(image, 1)
+            # image = cv2.flip(image, 1)
             cv2.putText(image, "FPS: " + str(int(fps)), (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2,
                         cv2.LINE_AA)
             cv2.putText(image, "FPS: " + str(int(fps)), (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2,
@@ -245,3 +257,11 @@ with mp_pose.Pose(
         if cv2.waitKey(5) & 0xFF == 27:
             break
 cap.release()
+
+# Convert lists to numpy arrays
+mpShoulder = np.array(mpShoulder)
+ukfShoulder = np.array(ukfShoulder)
+
+# Save the data
+np.save(mpName, mpShoulder)
+np.save(ukfName, ukfShoulder)
