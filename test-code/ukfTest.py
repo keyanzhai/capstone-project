@@ -15,9 +15,9 @@ from filterpy.kalman import MerweScaledSigmaPoints, JulierSigmaPoints
 vidName = 'v3'
 
 # File locations for the video and where to save the mpPos and ukfPos files
-fileName = 'test-data/' + vidName + '.mov'
-mpName = 'test-data/stickerPos/' + vidName + '-mpPos.npy'
-ukfName = 'test-data/stickerPos/' + vidName + '-ukfPos.npy'
+fileName = '../test-data/' + vidName + '.mov'
+mpName = '../test-data/stickerPos/' + vidName + '-mpPos.npy'
+ukfName = '../test-data/stickerPos/' + vidName + '-ukfPos.npy'
 
 ################################################################################################
 # UKF Functions
@@ -67,13 +67,13 @@ elif track.lower()=='shoulders':
 # Initialization of the UKF
 points = MerweScaledSigmaPoints(numDims*2, alpha=.1, beta=2., kappa=-1,sqrt_method=scipy.linalg.sqrtm)
 # points = JulierSigmaPoints(numDims*2, kappa=-1,sqrt_method=scipy.linalg.sqrtm)
-filter = kalman.UnscentedKalmanFilter(numDims*2,numDims,1./20.,measure,dynamics,points)
+filter = kalman.UnscentedKalmanFilter(numDims*2,numDims,1./30.,measure,dynamics,points)
 filter.x = np.zeros(numDims*2)  # Initial State, though this is overwritten by the first measurement
 filter.P *= 0.5     # Covariance
 filter.R = np.diag(np.ones((numDims*2,))*1) #Measurement Noise
-filter.Q = filter.Q*0.1   #Dynamics Noise (Increasing this increases the speed of the update)                                       #Q_discrete_white_noise(dim=2,dt = 1./20.,var = 0.01**2, block_size=numDims,order_by_dim=False)
+filter.Q = filter.Q*1.2   #Dynamics Noise (Increasing this increases the speed of the update)                                       #Q_discrete_white_noise(dim=2,dt = 1./20.,var = 0.01**2, block_size=numDims,order_by_dim=False)
 frameCount = -1
-areaSize = 10  # This is 1/2 the size of the area used for optical flow
+areaSize = 15  # This is 1/2 the size of the area used for optical flow
 def gaus2d(x=0, y=0, mx=0, my=0, sx=1, sy=1):
     return 1. / (2. * np.pi * sx * sy) * np.exp(
         -((x - mx) ** 2. / (2. * sx ** 2.) + (y - my) ** 2. / (2. * sy ** 2.)))
@@ -130,7 +130,8 @@ with mp_pose.Pose(
             #################################################################
             # Need to run the UKF
             #################################################################
-            delt = time.time() - prevFrameTime
+            # delt = time.time() - prevFrameTime
+            delt = 1./30.
             if frameCount==0:   # Set the initial state of the filter
                 if velMethod=='opticalFlow':
                     prevImage = cv2.cvtColor(image,cv2.COLOR_BGR2GRAY)
@@ -165,7 +166,7 @@ with mp_pose.Pose(
                                   np.mean(gauss*rShoulderVel[:,:,1]),
                                   0.]).flatten()
 
-                        state = np.hstack((xyz, newVel)).flatten()
+                        state = np.hstack((xyz, newVel/delt)).flatten()
                     except:
                         vel = (xyz - state[0:numDims]) / delt
                         state = np.hstack((xyz, vel)).flatten()
