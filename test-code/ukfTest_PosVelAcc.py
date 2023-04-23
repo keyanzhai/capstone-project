@@ -24,15 +24,16 @@ ukfName = '../test-data/stickerPos/' + vidName + '-ukfPos.npy'
 ################################################################################################
 def measure(x,numDims):
     # If x is just the positions
-    x = x[0:numDims*2]
+    x = x[0:numDims*3]
     return x
 
 def dynamics(x, dt,numDims):
     # This function takes the state and adds the velocity*dt to the position
-
-    tmp = x[0:numDims] + x[numDims:] * dt*1.1#*1E13
+    fudgeFactor = 1.1
+    tmp = x[0:numDims] + x[numDims:numDims*2] * dt*fudgeFactor + 0.5*x[numDims*2:]*dt**2 #*1.1#*1E13
+    tmpVel = x[numDims:numDims*2] + x[numDims*2:] * dt #*1.1#*1E13
     # print(x[numDims:] * dt*1E20)
-    tmp = np.vstack((tmp.reshape((numDims,1)), x[numDims:].reshape((numDims,1))))
+    tmp = np.vstack((tmp.reshape((numDims,1)), tmpVel.reshape((numDims,1)), x[numDims*2:].reshape((numDims,1))))
     return tmp.flatten()
 ################################################################################################
 
@@ -66,14 +67,14 @@ elif track.lower()=='shoulders':
 
 
 # Initialization of the UKF
-points = MerweScaledSigmaPoints(numDims*2, alpha = 1E-3, beta=2, kappa=0)
+points = MerweScaledSigmaPoints(numDims*3, alpha = 1E-3, beta=2, kappa=0)
 # points = MerweScaledSigmaPoints(numDims*2, alpha=.1, beta=2., kappa=-1,sqrt_method=scipy.linalg.sqrtm)
 # points = JulierSigmaPoints(numDims*2, kappa=-1,sqrt_method=scipy.linalg.sqrtm)
-filter = kalman.UnscentedKalmanFilter(numDims*2,numDims,1./30.,measure,dynamics,points)
-filter.x = np.zeros(numDims*2)  # Initial State, though this is overwritten by the first measurement
+filter = kalman.UnscentedKalmanFilter(numDims*3,numDims,1./30.,measure,dynamics,points)
+filter.x = np.zeros(numDims*3)  # Initial State, though this is overwritten by the first measurement
 filter.P *= 0.5     # Covariance
-filter.R = np.diag(np.ones((numDims*2,))*3) #Measurement Noise
-filter.Q = np.diag((.4,.4,.4,.1,.1,.1,.6,.6,.6,.2,.2,.2)) #alright for v2 #np.diag((.4,.4,.4,.01,.01,.01,.6,.6,.6,.1,.1,.1))  Very good for v2        #filter.Q*.1   #Dynamics Noise (Increasing this increases the speed of the update)                                       #Q_discrete_white_noise(dim=2,dt = 1./20.,var = 0.01**2, block_size=numDims,order_by_dim=False)
+filter.R = np.diag(np.ones((numDims*3,))*3) #Measurement Noise
+filter.Q = np.diag((.4,.4,.4,.1,.1,.1,.6,.6,.6,.4,.4,.4,.6,.6,.6,.4,.4,.4)) #alright for v2 #np.diag((.4,.4,.4,.01,.01,.01,.6,.6,.6,.1,.1,.1))  Very good for v2        #filter.Q*.1   #Dynamics Noise (Increasing this increases the speed of the update)                                       #Q_discrete_white_noise(dim=2,dt = 1./20.,var = 0.01**2, block_size=numDims,order_by_dim=False)
 # print(filter.Q.shape)
 frameCount = -1
 areaSize = 30  # This is 1/2 the size of the area used for optical flow
@@ -142,7 +143,7 @@ with mp_pose.Pose(
                 if velMethod=='opticalFlow':
                     prevImage = cv2.cvtColor(image,cv2.COLOR_BGR2GRAY)
 
-                state = np.hstack((xyz, np.zeros((numDims)))).flatten()
+                state = np.hstack((xyz, np.zeros((numDims*2)))).flatten()
                 filter.x = state
                 # filter.x[3] x - shoulder
                 # filter.x[4] y - shoulder
@@ -194,14 +195,16 @@ with mp_pose.Pose(
 
                     # except:
                         vel = (xyz - state[0:numDims]) / delt
-                        state = np.hstack((xyz, vel)).flatten()
+                        acc = (vel - state[numDims:2*numDims]) / delt
+                        state = np.hstack((xyz, vel, acc)).flatten()
 
 
 
                     # cv2.calcOpticalFlowFarneback(prvs, next, None, 0.5, 3, 15, 3, 5, 1.2, 0)
                 else:
                     vel = (xyz - state[0:numDims])/delt
-                    state = np.hstack((xyz, vel)).flatten()
+                    acc = (vel - state[numDims:2 * numDims]) / delt
+                    state = np.hstack((xyz, vel, acc)).flatten()
 
             filter.predict(dt=delt,numDims=numDims)
             filter.update(state,numDims=numDims)
