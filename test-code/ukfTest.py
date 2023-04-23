@@ -12,7 +12,7 @@ from filterpy.common import Q_discrete_white_noise
 from filterpy.kalman import MerweScaledSigmaPoints, JulierSigmaPoints
 
 # TODO: Change this to change the video
-vidName = 'v3'
+vidName = 'v2'
 
 # File locations for the video and where to save the mpPos and ukfPos files
 fileName = '../test-data/' + vidName + '.mov'
@@ -30,7 +30,8 @@ def measure(x,numDims):
 def dynamics(x, dt,numDims):
     # This function takes the state and adds the velocity*dt to the position
 
-    tmp = x[0:numDims] + x[numDims:] * dt
+    tmp = x[0:numDims] + x[numDims:] * dt#*1E13
+    # print(x[numDims:] * dt*1E20)
     tmp = np.vstack((tmp.reshape((numDims,1)), x[numDims:].reshape((numDims,1))))
     return tmp.flatten()
 ################################################################################################
@@ -65,6 +66,7 @@ elif track.lower()=='shoulders':
 
 
 # Initialization of the UKF
+# points = MerweScaledSigmaPoints(numDims*2, alpha = 1E-3, beta=2, kappa=0)
 points = MerweScaledSigmaPoints(numDims*2, alpha=.1, beta=2., kappa=-1,sqrt_method=scipy.linalg.sqrtm)
 # points = JulierSigmaPoints(numDims*2, kappa=-1,sqrt_method=scipy.linalg.sqrtm)
 filter = kalman.UnscentedKalmanFilter(numDims*2,numDims,1./30.,measure,dynamics,points)
@@ -73,7 +75,7 @@ filter.P *= 0.5     # Covariance
 filter.R = np.diag(np.ones((numDims*2,))*1) #Measurement Noise
 filter.Q = filter.Q*1.2   #Dynamics Noise (Increasing this increases the speed of the update)                                       #Q_discrete_white_noise(dim=2,dt = 1./20.,var = 0.01**2, block_size=numDims,order_by_dim=False)
 frameCount = -1
-areaSize = 15  # This is 1/2 the size of the area used for optical flow
+areaSize = 2  # This is 1/2 the size of the area used for optical flow
 def gaus2d(x=0, y=0, mx=0, my=0, sx=1, sy=1):
     return 1. / (2. * np.pi * sx * sy) * np.exp(
         -((x - mx) ** 2. / (2. * sx ** 2.) + (y - my) ** 2. / (2. * sy ** 2.)))
@@ -159,14 +161,25 @@ with mp_pose.Pose(
                             curImage[xy1[1] - areaSize:xy1[1] + areaSize, xy1[0] - areaSize:xy1[0] + areaSize],
                             None, 0.5, 3, 15, 3, 5, 1.2, 0)
 
-                        newVel = np.array([np.mean(gauss*lShoulderVel[:,:,0]),
-                                  np.mean(gauss*lShoulderVel[:,:,1]),
-                                  0.,
-                                  np.mean(gauss*rShoulderVel[:,:,0]),
-                                  np.mean(gauss*rShoulderVel[:,:,1]),
-                                  0.]).flatten()
+                        # newVel = np.array([np.mean(gauss*lShoulderVel[:,:,0]),
+                        #           np.mean(gauss*lShoulderVel[:,:,1]),
+                        #           0.,
+                        #           np.mean(gauss*rShoulderVel[:,:,0]),
+                        #           np.mean(gauss*rShoulderVel[:,:,1]),
+                        #           0.]).flatten()
 
-                        state = np.hstack((xyz, newVel/delt)).flatten()
+                        newVel = np.array([np.median(lShoulderVel[:, :, 0]),
+                                           np.median(lShoulderVel[:, :, 1]),
+                                           0.,
+                                           np.median(rShoulderVel[:, :, 0]),
+                                           np.median(rShoulderVel[:, :, 1]),
+                                           0.]).flatten()
+
+                        # state = np.hstack((xyz, newVel/delt)).flatten()
+                        print(f'Frame Vel Method: {((xyz - state[0:numDims]))[3:]}, Optical Flow: {(newVel/delt)[3:]}')
+                        state = np.hstack((xyz, newVel / delt)).flatten()
+
+
                     except:
                         vel = (xyz - state[0:numDims]) / delt
                         state = np.hstack((xyz, vel)).flatten()
