@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 
 # Define the number of corners in the calibration pattern
-pattern_size = (8, 11)
+pattern_size = (7, 10)
 
 # Define the size of the squares in the calibration pattern (in meters)
 square_size = 0.023
@@ -12,10 +12,13 @@ obj_points = []
 img_points = []
 
 # Load the calibration images
-fileLoc = "test-data/calibration/"
+# fileLoc = "test-data/calibration/"
 calib_images = []
-for i in range(1,25):
-    calib_images.append(fileLoc + "c" + str(i) + ".jpg")
+# for i in range(1,25):
+    # calib_images.append(fileLoc + "c" + str(i) + ".jpg")
+
+calib_images.append("test.jpeg")
+
 
 i = 0
 # Loop over the calibration images
