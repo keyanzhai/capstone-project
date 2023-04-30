@@ -63,10 +63,10 @@ def test3_optical_flow(stage_id):
                 print("No feet joints detected...")
                 break
 
-            if (frame_cnt < 30):
-                print("frame_cnt < 30, skip...")
-            elif (frame_cnt == 30):
-                print("frame_cnt = 30, set init positions...")
+            if (frame_cnt < 5):
+                print("frame_cnt < 5, skip...")
+            elif (frame_cnt == 5):
+                print("frame_cnt = 5, set init positions...")
                 start_time = time.time() # start the timer
 
                 # Positions of the 6 joints of the current frame
@@ -78,14 +78,14 @@ def test3_optical_flow(stage_id):
                 start_pos = curr_pos # (4, 2)
                 prev_pos = curr_pos # (4, 2)
                 frame_old_img = frame_img.copy()
-                print("initial positions: ", start_pos)
+                # print("initial positions: ", start_pos)
             else:
-                print("frame_cnt > 30, start optical flow...")
+                print("frame_cnt > 5, start optical flow...")
                 # Calculate the optical flow
                 prev_pos = prev_pos.reshape(-1,1,2).astype(np.float32)
                 curr_pos, st, err = cv2.calcOpticalFlowPyrLK(frame_old_img, frame_img, prev_pos, None, **lk_params)
                 curr_pos = curr_pos.reshape(-1,2)
-                print("curr_pos = ", curr_pos)
+                # print("curr_pos = ", curr_pos)
 
                 # Calculate the distance between the current position and the start position
                 sub_pos = curr_pos - start_pos # 6x2
@@ -94,11 +94,13 @@ def test3_optical_flow(stage_id):
                 dis_pos = (np.sqrt(sum_pos)).reshape((4,1)) # 6x1
                 threshold = 0.25 * right_foot_length * np.ones((4,1))
 
-                print("dis_pos = ", dis_pos)
+                # print("dis_pos = ", dis_pos)
 
                 # If there's a movement of the feet, the test fails
                 if np.any(dis_pos > threshold):
                     time_elapsed = time.time() - start_time
+                    cap.release()
+                    print("time_elapsed = ", time_elapsed)
                     return time_elapsed
 
                 # Update the previous position
@@ -109,6 +111,8 @@ def test3_optical_flow(stage_id):
             # If the time elapsed is greater than 10 seconds then the user past the test
             time_elapsed = time.time() - start_time
             if (time_elapsed > 10):
+                print("time_elapsed = ", time_elapsed)
+                cap.release()
                 return time_elapsed
             
             # Draw the pose annotation on the image.
@@ -121,7 +125,8 @@ def test3_optical_flow(stage_id):
                 landmark_drawing_spec=mp_drawing_styles.get_default_pose_landmarks_style())
 
             # Flip the image horizontally for a selfie-view display.
-            cv2.imshow('MediaPipe Pose', cv2.flip(image, 1))
+            cv2.putText(image, "time = " + str(int(time.time() - start_time)), (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 0), 2, cv2.LINE_AA)
+            cv2.imshow('MediaPipe Pose', image)
             if cv2.waitKey(5) & 0xFF == 27:
                 break
         

@@ -51,6 +51,7 @@ def test2():
                     state = 0
                     if (last_state == 1):
                         count += 1
+                        print("count = ", count)
                 else:
                     # standing
                     state = 1
@@ -69,10 +70,12 @@ def test2():
             frame += 1
             curr_time = time.time()
             if (curr_time - start_time > 30):
+                cap.release()
                 return count
 
             # Flip the image horizontally for a selfie-view display.
-            cv2.imshow('MediaPipe Pose', cv2.flip(image, 1))
+            cv2.putText(image, "time = " + str(int(time.time() - start_time)) + " count = " + str(count), (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 0), 2, cv2.LINE_AA)
+            cv2.imshow('MediaPipe Pose', image)
             if cv2.waitKey(5) & 0xFF == 27:
                 break
     

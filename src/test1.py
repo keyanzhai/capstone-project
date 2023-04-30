@@ -71,6 +71,7 @@ def test1():
                 if (abs(rightCurr_y - rightStart_y) < image_height * 0.05) and (abs(leftCurr_y - leftStart_y) < image_height * 0.05) \
                    and (rightx_distance > image_width * 0.4) and (leftx_distance > image_width * 0.4):
                     total_time = time.time() - start_time # stop the timer, return the total time
+                    cap.release()
                     return total_time
                 
                 leftPrev_x = leftCurr_x
@@ -88,7 +89,8 @@ def test1():
             frame += 1
 
             # Flip the image horizontally for a selfie-view display.
-            cv2.imshow('MediaPipe Pose', cv2.flip(image, 1))
+            cv2.putText(image, "time = " + str(int(time.time() - start_time)), (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 0), 2, cv2.LINE_AA)
+            cv2.imshow('MediaPipe Pose', image)
             if cv2.waitKey(5) & 0xFF == 27:
                 break
     

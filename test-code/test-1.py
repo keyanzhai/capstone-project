@@ -72,7 +72,7 @@ with mp_pose.Pose(
           if abs(rightCurr_y - rightStart_y) < image_height * 0.05 and abs(leftCurr_y - leftStart_y) < image_height * 0.05 and (rightx_distance > image_width * 0.4) and (leftx_distance > image_width * 0.4):
             total_time = time.time() - start_time
             print("total_time = ", total_time)
-            break
+            # break
           print("Sitting")
         else:
           stand_state = 1

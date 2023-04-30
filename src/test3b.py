@@ -54,8 +54,8 @@ def test3b():
                 left_index = results.pose_world_landmarks.landmark[mp_pose.PoseLandmark.LEFT_FOOT_INDEX]
                 left_index_pos = np.array([left_index.x * image_width, left_index.y * image_height, left_index.z * image_width])
 
-                if (frame >= 30):
-                    if (frame == 30):
+                if (frame >= 5):
+                    if (frame == 5):
                         start_pos[0] = right_heel_pos
                         start_pos[1] = right_ankle_pos
                         start_pos[2] = right_index_pos
@@ -91,10 +91,14 @@ def test3b():
                     # if abs(right_ankle[1] - left_ankle[1])
                     # print("right ankle = ", right_ankle_pos[1], "left ankle = ", left_ankle_pos[1], "difference = ", abs(right_ankle_pos[1] - left_ankle_pos[1]))
                     if (abs(right_ankle_pos[1] - left_ankle_pos[1]) < 15):
+                        cap.release()
+                        print("time_elapsed = ", time_elapsed)
                         return time_elapsed 
                 
                     # # If the time elapsed is greater than 10 seconds then the user past the test
                     if (time_elapsed >= 10):
+                        cap.release()
+                        print("time_elapsed = ", time_elapsed)
                         return time_elapsed
             
             # Draw the pose annotation on the image.
@@ -109,7 +113,8 @@ def test3b():
             frame += 1
 
             # Flip the image horizontally for a selfie-view display.
-            cv2.imshow('MediaPipe Pose', cv2.flip(image, 1))
+            cv2.putText(image, "time = " + str(int(time.time() - start_time)), (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 0), 2, cv2.LINE_AA)
+            cv2.imshow('MediaPipe Pose', image)
             if cv2.waitKey(5) & 0xFF == 27:
                 break
         

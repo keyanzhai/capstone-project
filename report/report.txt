@@ -3,16 +3,16 @@ Report for fall risk assessment
 -------------------------------
 User information
 
-Name: Keyan Zhai
-Age: 24
+Name: Amar
+Age: 25
 Gender: male
-Height: 178 cm
-Test date: 2023-04-20
+Height: 182 cm
+Test date: 2023-04-29
 
 -------------------------------
 Test1 - Timed Up & Go (TUG)
 
-Total time = 5.19 seconds. 
+Total time = 9.60 seconds. 
 
 Test1 passed. User is not at risk for falling.
 
@@ -29,24 +29,33 @@ Test3 - 4-Stage Balance Test
 	-------------------------------
 	Test3 stage1 - stand with your feet side-by-side
 
-	Time = 2.69 seconds.
+	Time = 8.71 seconds.
 
 	Test3 stage1 failed. User is at risk for falling.
 
 	-------------------------------
 	Test3 stage2-left - place the instep of left foot so it is touching the big toe of the right foot
 
-	Time = 2.66 seconds.
+	Time = 10.05 seconds.
 
-	Test3 stage2-left failed. User is at risk for falling.
+	Test3 stage2-left passed. User is not at risk for falling.
 
 	-------------------------------
 	Test3 stage3-left - Tandem stand: Place left foot in front of the right foot, heel touching toe. 
 
-	Time = 3.81 seconds.
+	Time = 6.30 seconds.
 
 	Test3 stage3-left failed. User is at risk for falling.
 
 	-------------------------------
 	Test3 stage4-right - Stand on right foot.
+
+	Time = 10.04 seconds.
+
+	Test3 stage4-right passed. User is not at risk for falling.
+
+-------------------------------
+Summary
+
+User is at risk for falling.
 

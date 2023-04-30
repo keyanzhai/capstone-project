@@ -11,7 +11,7 @@ if __name__ == "__main__":
     report_file.write("Report for fall risk assessment\n\n")
     
     at_risk = False
-    total_tests = 9
+    total_tests = 3
     passed_tests = 0
 
     # =========================== gather user info ===========================
@@ -180,7 +180,7 @@ if __name__ == "__main__":
     else:
         report_file.write("User is not at risk for falling.\n\n")
     
-    report_file.write("Passed %d out of %d tests.\n" % (passed_tests, total_tests))
+    # report_file.write("Passed %d out of %d tests.\n" % (passed_tests, total_tests))
 
 
     report_file.close()
