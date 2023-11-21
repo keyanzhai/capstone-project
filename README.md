@@ -2,6 +2,8 @@
 
 ## Demo
 
+[Video demo](https://www.youtube.com/watch?v=GFWu0PpIKvA&t=710s)
+
 ```
 source mp_env/bin/activate
 cd src
