@@ -2,7 +2,7 @@
 
 ## Demo
 
-[Video demo](https://www.youtube.com/watch?v=GFWu0PpIKvA&t=710s)
+[Video demo](https://www.youtube.com/watch?v=GFWu0PpIKvA)
 
 ```
 source mp_env/bin/activate
